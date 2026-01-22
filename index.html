@@ -1,0 +1,22 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nisha Tiffin Service</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<h1>Nisha Tiffin Service</h1>
+<div id="menuContainer">Loading...</div>
+<script>
+fetch('/api/menu')
+.then(r=>r.json())
+.then(d=>{
+document.getElementById('menuContainer').innerHTML =
+d.map(i=>`<p>${i.name} - ₹${i.price}</p>`).join('');
+});
+</script>
+</body>
+</html>
