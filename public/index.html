@@ -1,22 +1,57 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nisha Tiffin Service</title>
-<link rel="stylesheet" href="./style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nisha Tiffin Service</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-<h1>Nisha Tiffin Service</h1>
-<div id="menuContainer">Loading...</div>
+
+<header class="navbar">
+  <div class="logo"><i class="fa-solid fa-utensils"></i> Nisha Tiffin</div>
+  <div class="cart-btn" onclick="toggleCart()">
+    <i class="fa-solid fa-cart-shopping"></i>
+    <span id="cartCount">0</span>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Home Style Tiffin Service</h1>
+  <p>Fresh food delivered daily in Newtown, Kolkata</p>
+  <a href="#menu" class="btn">View Menu</a>
+</section>
+
+<section id="menu" class="menu">
+  <h2>Today's Menu</h2>
+  <div class="menu-grid" id="menuContainer">Loading...</div>
+</section>
+
+<div class="cart" id="cart">
+  <div class="cart-header">
+    <h3>Your Order</h3>
+    <i class="fa-solid fa-xmark" onclick="toggleCart()"></i>
+  </div>
+  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-footer">
+    <p>Total: <strong id="cartTotal">₹0</strong></p>
+    <button onclick="checkout()">Order on WhatsApp</button>
+  </div>
+</div>
+
 <script>
+let menu = [];
+let cart = [];
+
 fetch('/api/menu')
-.then(r=>r.json())
-.then(d=>{
-document.getElementById('menuContainer').innerHTML =
-d.map(i=>`<p>${i.name} - ₹${i.price}</p>`).join('');
-});
-</script>
-</body>
-</html>
+  .then(res => res.json())
+  .then(data => {
+    menu = data;
+    renderMenu();
+  });
+
+function renderMenu() {
+  con
