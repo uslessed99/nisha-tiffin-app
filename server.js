@@ -1,36 +1,56 @@
-
 const express = require('express');
 const fs = require('fs');
 const cors = require('cors');
+const path = require('path');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+
+// Serve static files from /public
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ✅ ROOT ROUTE (THIS FIXES "Cannot GET /")
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-
-const ADMIN_PASSWORD = "nisha";
-
+// API: Get Menu
 app.get('/api/menu', (req, res) => {
-  fs.readFile('menu.json', 'utf8', (err, data) => {
-    if (err) return res.status(500).send("Error reading data");
+  fs.readFile(path.join(__dirname, 'menu.json'), 'utf8', (err, data) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error reading menu' });
+    }
     res.json(JSON.parse(data));
   });
 });
 
+// API: Update Menu
+const ADMIN_PASSWORD = "nisha";
+
 app.post('/api/menu', (req, res) => {
   const { password, newMenu } = req.body;
+
   if (password !== ADMIN_PASSWORD) {
-    return res.status(401).json({ success: false, message: "Wrong Password!" });
+    return res.status(401).json({ success: false, message: 'Wrong Password' });
   }
-  fs.writeFile('menu.json', JSON.stringify(newMenu, null, 2), err => {
-    if (err) return res.status(500).json({ success: false, message: "Save failed" });
-    res.json({ success: true, message: "Menu Updated Successfully!" });
-  });
+
+  fs.writeFile(
+    path.join(__dirname, 'menu.json'),
+    JSON.stringify(newMenu, null, 2),
+    err => {
+      if (err) {
+        return res.status(500).json({ success: false, message: 'Save failed' });
+      }
+      res.json({ success: true });
+    }
+  );
 });
 
-app.listen(PORT, () => console.log(`Server running on ${PORT}`));
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`);
+});
