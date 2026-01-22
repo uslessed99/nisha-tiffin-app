@@ -11,7 +11,6 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
 <header class="navbar">
   <div class="logo"><i class="fa-solid fa-utensils"></i> Nisha Tiffin</div>
   <div class="cart-btn" onclick="toggleCart()">
@@ -20,7 +19,6 @@
   </div>
 </header>
 
-<!-- HERO BANNER -->
 <section class="hero hero-banner">
   <div class="hero-content">
     <h1>Home Style Tiffin Service</h1>
@@ -29,7 +27,6 @@
   </div>
 </section>
 
-<!-- MENU -->
 <section id="menu" class="menu">
   <h2>Today's Menu</h2>
   <div class="menu-grid" id="menuContainer">
@@ -37,18 +34,123 @@
   </div>
 </section>
 
-<!-- REVIEWS -->
 <section class="reviews">
   <h2>What Our Customers Say</h2>
-
   <div class="review-grid">
     <div class="review-card">
       ⭐⭐⭐⭐⭐
       <p>“Very tasty home food. Feels like ghar ka khana.”</p>
       <strong>– Rohit, Newtown</strong>
     </div>
-
     <div class="review-card">
       ⭐⭐⭐⭐⭐
       <p>“Clean, hygienic and always on time.”</p>
-      <strong>– Ankita, IT
+      <strong>– Ankita, IT Park</strong>
+    </div>
+    <div class="review-card">
+      ⭐⭐⭐⭐⭐
+      <p>“Best tiffin service near Action Area.”</p>
+      <strong>– Suman, Kolkata</strong>
+    </div>
+  </div>
+</section>
+
+<div class="cart" id="cart">
+  <div class="cart-header">
+    <h3>Your Order</h3>
+    <i class="fa-solid fa-xmark" onclick="toggleCart()"></i>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <p>No items added</p>
+  </div>
+  <div class="cart-footer">
+    <p>Total: <strong id="cartTotal">₹0</strong></p>
+    <button onclick="checkout()">Order on WhatsApp</button>
+  </div>
+</div>
+
+<script>
+let menu = [];
+let cart = [];
+
+const vegImages = [
+  "https://images.unsplash.com/photo-1589301760014-d929f3979dbc",
+  "https://images.unsplash.com/photo-1626776876729-bab4365b2f42"
+];
+const nonVegImages = [
+  "https://images.unsplash.com/photo-1604908177522-4324c2d3b94c",
+  "https://images.unsplash.com/photo-1605472564811-0e1b8b7a0f52"
+];
+
+// 🔒 LOCKED, STABLE API CALL
+fetch('/api/menu')
+  .then(res => res.json())
+  .then(data => {
+    menu = data;
+    renderMenu();
+  })
+  .catch(() => {
+    document.getElementById('menuContainer').innerHTML =
+      '<p style="color:red">Menu failed to load</p>';
+  });
+
+function renderMenu() {
+  const container = document.getElementById('menuContainer');
+  container.innerHTML = '';
+
+  menu.forEach((item, i) => {
+    const img = item.category === 'nonveg'
+      ? nonVegImages[i % nonVegImages.length]
+      : vegImages[i % vegImages.length];
+
+    container.innerHTML += `
+      <div class="card">
+        <img src="${img}">
+        <div class="card-content">
+          <h3>${item.name}</h3>
+          <p>${item.desc}</p>
+          <div class="card-footer">
+            <span class="price">₹${item.price}</span>
+            <button onclick="addToCart(${item.id})">Add</button>
+          </div>
+        </div>
+      </div>`;
+  });
+}
+
+function addToCart(id) {
+  const item = menu.find(i => i.id === id);
+  const found = cart.find(i => i.id === id);
+  found ? found.qty++ : cart.push({...item, qty:1});
+  updateCart();
+  toggleCart(true);
+}
+
+function updateCart() {
+  let total = 0, count = 0;
+  const body = document.getElementById('cartBody');
+  body.innerHTML = '';
+  cart.forEach(i => {
+    total += i.price * i.qty;
+    count += i.qty;
+    body.innerHTML += `<p>${i.qty} × ${i.name}</p>`;
+  });
+  document.getElementById('cartTotal').innerText = '₹' + total;
+  document.getElementById('cartCount').innerText = count;
+}
+
+function toggleCart(force=false) {
+  const c = document.getElementById('cart');
+  force ? c.classList.add('open') : c.classList.toggle('open');
+}
+
+function checkout() {
+  if (!cart.length) return alert("Add items first");
+  let msg = "Hello Nisha Tiffin, Order:%0A";
+  cart.forEach(i => msg += `- ${i.qty} × ${i.name}%0A`);
+  window.open(`https://wa.me/918588029902?text=${msg}`);
+}
+</script>
+
+</body>
+</html>
