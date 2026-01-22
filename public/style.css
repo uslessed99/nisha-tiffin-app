@@ -192,3 +192,37 @@ body {
   border-radius: 6px;
   font-size: 16px;
 }
+.hero-banner-img {
+  position: relative;
+  height: 70vh;
+  overflow: hidden;
+}
+
+.hero-banner-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.hero-overlay h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.hero-overlay p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
