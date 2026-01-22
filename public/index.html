@@ -27,15 +27,20 @@
 
 <section id="menu" class="menu">
   <h2>Today's Menu</h2>
-  <div class="menu-grid" id="menuContainer">Loading...</div>
+  <div class="menu-grid" id="menuContainer">
+    <p>Loading menu...</p>
+  </div>
 </section>
 
+<!-- CART (HIDDEN BY DEFAULT) -->
 <div class="cart" id="cart">
   <div class="cart-header">
     <h3>Your Order</h3>
     <i class="fa-solid fa-xmark" onclick="toggleCart()"></i>
   </div>
-  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-body" id="cartBody">
+    <p>No items added</p>
+  </div>
   <div class="cart-footer">
     <p>Total: <strong id="cartTotal">₹0</strong></p>
     <button onclick="checkout()">Order on WhatsApp</button>
@@ -46,12 +51,93 @@
 let menu = [];
 let cart = [];
 
+// FETCH MENU (GUARANTEED)
 fetch('/api/menu')
   .then(res => res.json())
   .then(data => {
     menu = data;
     renderMenu();
+  })
+  .catch(() => {
+    document.getElementById('menuContainer').innerHTML =
+      '<p>Menu unavailable</p>';
   });
 
 function renderMenu() {
-  con
+  const container = document.getElementById('menuContainer');
+  container.innerHTML = '';
+  menu.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <h3>${item.name}</h3>
+      <p>${item.desc}</p>
+      <div class="card-footer">
+        <span>₹${item.price}</span>
+        <button onclick="addToCart(${item.id})">Add</button>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function addToCart(id) {
+  const item = menu.find(i => i.id === id);
+  const found = cart.find(i => i.id === id);
+
+  if (found) {
+    found.qty++;
+  } else {
+    cart.push({ ...item, qty: 1 });
+  }
+
+  updateCart();
+  toggleCart(true);
+}
+
+function updateCart() {
+  const body = document.getElementById('cartBody');
+  const totalEl = document.getElementById('cartTotal');
+  const countEl = document.getElementById('cartCount');
+
+  body.innerHTML = '';
+  let total = 0;
+  let count = 0;
+
+  cart.forEach(item => {
+    total += item.price * item.qty;
+    count += item.qty;
+    body.innerHTML += `<p>${item.qty} × ${item.name}</p>`;
+  });
+
+  totalEl.innerText = '₹' + total;
+  countEl.innerText = count;
+}
+
+function toggleCart(forceOpen = false) {
+  const cartEl = document.getElementById('cart');
+  if (forceOpen) cartEl.classList.add('open');
+  else cartEl.classList.toggle('open');
+}
+
+function checkout() {
+  if (cart.length === 0) {
+    alert("Please add items to cart");
+    return;
+  }
+
+  let msg = "Hello Nisha Tiffin, I want to order:%0A";
+  let total = 0;
+
+  cart.forEach(i => {
+    msg += `- ${i.qty} × ${i.name} (₹${i.price * i.qty})%0A`;
+    total += i.price * i.qty;
+  });
+
+  msg += `%0ATotal: ₹${total}`;
+  window.open(`https://wa.me/918588029902?text=${msg}`, '_blank');
+}
+</script>
+
+</body>
+</html>
