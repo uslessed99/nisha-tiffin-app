@@ -11,6 +11,7 @@
 </head>
 <body>
 
+<!-- NAVBAR -->
 <header class="navbar">
   <div class="logo"><i class="fa-solid fa-utensils"></i> Nisha Tiffin</div>
   <div class="cart-btn" onclick="toggleCart()">
@@ -19,6 +20,7 @@
   </div>
 </header>
 
+<!-- HERO BANNER -->
 <section class="hero hero-banner">
   <div class="hero-content">
     <h1>Home Style Tiffin Service</h1>
@@ -27,7 +29,7 @@
   </div>
 </section>
 
-
+<!-- MENU -->
 <section id="menu" class="menu">
   <h2>Today's Menu</h2>
   <div class="menu-grid" id="menuContainer">
@@ -35,124 +37,18 @@
   </div>
 </section>
 
-<!-- CART -->
-<div class="cart" id="cart">
-  <div class="cart-header">
-    <h3>Your Order</h3>
-    <i class="fa-solid fa-xmark" onclick="toggleCart()"></i>
-  </div>
-  <div class="cart-body" id="cartBody">
-    <p>No items added</p>
-  </div>
-  <div class="cart-footer">
-    <p>Total: <strong id="cartTotal">₹0</strong></p>
-    <button onclick="checkout()">Order on WhatsApp</button>
-  </div>
-</div>
+<!-- REVIEWS -->
+<section class="reviews">
+  <h2>What Our Customers Say</h2>
 
-<script>
-let menu = [];
-let cart = [];
+  <div class="review-grid">
+    <div class="review-card">
+      ⭐⭐⭐⭐⭐
+      <p>“Very tasty home food. Feels like ghar ka khana.”</p>
+      <strong>– Rohit, Newtown</strong>
+    </div>
 
-// MULTIPLE INDIAN FOOD IMAGES
-const vegImages = [
-  "https://images.unsplash.com/photo-1601050690597-df0568f70950",
-  "https://images.unsplash.com/photo-1589301760014-d929f3979dbc",
-  "https://images.unsplash.com/photo-1626776876729-bab4365b2f42"
-];
-
-const nonVegImages = [
-  "https://images.unsplash.com/photo-1604908177522-4324c2d3b94c",
-  "https://images.unsplash.com/photo-1605472564811-0e1b8b7a0f52",
-  "https://images.unsplash.com/photo-1628294895950-9805252327bc"
-];
-
-// ✅ FIXED FETCH FOR RENDER
-fetch(window.location.origin + '/api/menu')
-  .then(res => res.json())
-  .then(data => {
-    menu = data;
-    renderMenu();
-  })
-  .catch(err => {
-    document.getElementById('menuContainer').innerHTML =
-      '<p style="color:red">Menu failed to load</p>';
-  });
-
-function renderMenu() {
-  const container = document.getElementById('menuContainer');
-  container.innerHTML = '';
-
-  menu.forEach((item, index) => {
-    const imgs = item.category === 'nonveg' ? nonVegImages : vegImages;
-    const img = imgs[index % imgs.length];
-
-    container.innerHTML += `
-      <div class="card">
-        <img src="${img}" alt="${item.name}">
-        <div class="card-content">
-          <h3>${item.name}</h3>
-          <p>${item.desc}</p>
-          <div class="card-footer">
-            <span class="price">₹${item.price}</span>
-            <button onclick="addToCart(${item.id})">Add</button>
-          </div>
-        </div>
-      </div>
-    `;
-  });
-}
-
-function addToCart(id) {
-  const item = menu.find(i => i.id === id);
-  const found = cart.find(i => i.id === id);
-
-  if (found) found.qty++;
-  else cart.push({ ...item, qty: 1 });
-
-  updateCart();
-  toggleCart(true);
-}
-
-function updateCart() {
-  const body = document.getElementById('cartBody');
-  const totalEl = document.getElementById('cartTotal');
-  const countEl = document.getElementById('cartCount');
-
-  body.innerHTML = '';
-  let total = 0;
-  let count = 0;
-
-  cart.forEach(item => {
-    total += item.price * item.qty;
-    count += item.qty;
-    body.innerHTML += `<p>${item.qty} × ${item.name}</p>`;
-  });
-
-  totalEl.innerText = '₹' + total;
-  countEl.innerText = count;
-}
-
-function toggleCart(force = false) {
-  const c = document.getElementById('cart');
-  force ? c.classList.add('open') : c.classList.toggle('open');
-}
-
-function checkout() {
-  if (cart.length === 0) return alert("Add items first");
-
-  let msg = "Hello Nisha Tiffin, New Order:%0A";
-  let total = 0;
-
-  cart.forEach(i => {
-    msg += `- ${i.qty} × ${i.name} (₹${i.price * i.qty})%0A`;
-    total += i.price * i.qty;
-  });
-
-  msg += `%0ATotal: ₹${total}`;
-  window.open(`https://wa.me/918588029902?text=${msg}`, '_blank');
-}
-</script>
-
-</body>
-</html>
+    <div class="review-card">
+      ⭐⭐⭐⭐⭐
+      <p>“Clean, hygienic and always on time.”</p>
+      <strong>– Ankita, IT
