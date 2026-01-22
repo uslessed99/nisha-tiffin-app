@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Nisha Tiffin Service</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./style.css">
@@ -21,7 +21,7 @@
 
 <section class="hero">
   <h1>Home Style Tiffin Service</h1>
-  <p>Fresh, hygienic food delivered daily in Newtown, Kolkata</p>
+  <p>Fresh Indian food delivered daily in Newtown, Kolkata</p>
   <a href="#menu" class="btn">View Menu</a>
 </section>
 
@@ -51,29 +51,38 @@
 let menu = [];
 let cart = [];
 
-// Fallback images by category
-const images = {
-  veg: "https://images.unsplash.com/photo-1626776876729-bab4365b2f42",
-  nonveg: "https://images.unsplash.com/photo-1604908554161-8f0f3f4fddc6"
-};
+// MULTIPLE INDIAN FOOD IMAGES
+const vegImages = [
+  "https://images.unsplash.com/photo-1601050690597-df0568f70950",
+  "https://images.unsplash.com/photo-1589301760014-d929f3979dbc",
+  "https://images.unsplash.com/photo-1626776876729-bab4365b2f42"
+];
 
-fetch('/api/menu')
+const nonVegImages = [
+  "https://images.unsplash.com/photo-1604908177522-4324c2d3b94c",
+  "https://images.unsplash.com/photo-1605472564811-0e1b8b7a0f52",
+  "https://images.unsplash.com/photo-1628294895950-9805252327bc"
+];
+
+// ✅ FIXED FETCH FOR RENDER
+fetch(window.location.origin + '/api/menu')
   .then(res => res.json())
   .then(data => {
     menu = data;
     renderMenu();
   })
-  .catch(() => {
+  .catch(err => {
     document.getElementById('menuContainer').innerHTML =
-      '<p>Menu unavailable</p>';
+      '<p style="color:red">Menu failed to load</p>';
   });
 
 function renderMenu() {
   const container = document.getElementById('menuContainer');
   container.innerHTML = '';
 
-  menu.forEach(item => {
-    const img = images[item.category] || images.veg;
+  menu.forEach((item, index) => {
+    const imgs = item.category === 'nonveg' ? nonVegImages : vegImages;
+    const img = imgs[index % imgs.length];
 
     container.innerHTML += `
       <div class="card">
@@ -121,10 +130,26 @@ function updateCart() {
   countEl.innerText = count;
 }
 
-function toggleCart(forceOpen = false) {
-  const cartEl = document.getElementById('cart');
-  if (forceOpen) cartEl.classList.add('open');
-  else cartEl.classList.toggle('open');
+function toggleCart(force = false) {
+  const c = document.getElementById('cart');
+  force ? c.classList.add('open') : c.classList.toggle('open');
 }
 
-func
+function checkout() {
+  if (cart.length === 0) return alert("Add items first");
+
+  let msg = "Hello Nisha Tiffin, New Order:%0A";
+  let total = 0;
+
+  cart.forEach(i => {
+    msg += `- ${i.qty} × ${i.name} (₹${i.price * i.qty})%0A`;
+    total += i.price * i.qty;
+  });
+
+  msg += `%0ATotal: ₹${total}`;
+  window.open(`https://wa.me/918588029902?text=${msg}`, '_blank');
+}
+</script>
+
+</body>
+</html>
