@@ -9,6 +9,7 @@ body {
   color: #333;
 }
 
+/* NAVBAR */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -37,26 +38,47 @@ body {
   margin-left: 6px;
 }
 
-.hero {
-  text-align: center;
-  padding: 70px 20px;
-  background: linear-gradient(to right, #ff9800, #e65100);
-  color: white;
+/* HERO BANNER */
+.hero-banner {
+  min-height: 70vh;
+  background:
+    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+    url("https://images.unsplash.com/photo-1601050690597-df0568f70950");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.hero .btn {
-  display: inline-block;
-  margin-top: 20px;
+.hero-content {
+  text-align: center;
+  color: white;
+  max-width: 700px;
+}
+
+.hero-content h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.hero-content p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.btn {
   background: white;
   color: #e65100;
-  padding: 12px 24px;
+  padding: 12px 26px;
   border-radius: 25px;
   text-decoration: none;
   font-weight: 600;
 }
 
+/* MENU */
 .menu {
-  padding: 50px 20px;
+  padding: 60px 20px;
   max-width: 1100px;
   margin: auto;
 }
@@ -89,15 +111,6 @@ body {
   padding: 15px;
 }
 
-.card-content h3 {
-  margin: 0 0 5px;
-}
-
-.card-content p {
-  font-size: 14px;
-  color: #666;
-}
-
 .card-footer {
   display: flex;
   justify-content: space-between;
@@ -119,6 +132,29 @@ body {
   cursor: pointer;
 }
 
+/* REVIEWS */
+.reviews {
+  background: white;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+  gap: 25px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.review-card {
+  background: #fff7f0;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* CART */
 .cart {
   position: fixed;
   top: 0;
