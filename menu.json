@@ -1,0 +1,17 @@
+
+[
+  {
+    "id": 1,
+    "name": "Veg Standard Thali",
+    "price": 120,
+    "desc": "Rice, Dal, Veggies, Salad",
+    "category": "veg"
+  },
+  {
+    "id": 2,
+    "name": "Chicken Special Thali",
+    "price": 180,
+    "desc": "Chicken Curry, Rice, Roti",
+    "category": "nonveg"
+  }
+]
